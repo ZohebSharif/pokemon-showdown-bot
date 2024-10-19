@@ -1,0 +1,14 @@
+{
+    "alice": {
+        "identity_key": "025563910f8ef016b85723b9a35660da08431ac9f34d4fbc469670c1385fe63a",
+        "wallet_key": "W0Gbiv0gxcviK/nANyM973roF0YjPlfbmlS55WQEdmU="
+    },
+    "pokeshowdown_agent": {
+        "identity_key": "a4840bfaafae2a8d47d1bacae603e999985c7889601f5552e8aeabe3a8b4e24d",
+        "wallet_key": "aNSJWPcPMAu5S2WhJxYk0cXVznwhfxL04nEAI7D68UU="
+    },
+    "pokemon_agent": {
+        "identity_key": "49d91c79b557110b3b1e55ee7aae1465c6e11d6238e98a7372e14b32f8923a53",
+        "wallet_key": "qKrg2QMZwVv8Ch78QG5IbCnavLAIDkmLOpcVHu5SYyo="
+    }
+}
