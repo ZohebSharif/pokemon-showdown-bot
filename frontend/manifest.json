@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Pokemon Showdown Bot",
+    "description": "Suggests optimal moves in Pokemon Showdown.",
+    "version": "1.0",
+    "permissions": ["activeTab", "scripting"],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["*://play.pokemonshowdown.com/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
