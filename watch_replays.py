@@ -1,30 +1,54 @@
 import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 import re
+
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Enable headless mode
+chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (useful for headless mode)
+chrome_options.add_argument("--disable-extensions")  # Disable browser extensions
+chrome_options.add_argument("--disable-plugins")     # Disable plugins
+chrome_options.add_argument("--disable-images")      # Disable loading images
+chrome_options.add_argument("--disable-javascript")  # Disable JavaScript if not needed
+
+TIMEOUT = 20
 
 def remove_html_tags(html_content):
     # Regular expression to match HTML tags
     clean_text = re.sub('<.*?>', '\n', html_content)
     return clean_text
-def get_log(driver, link):
+def get_log(link, reset):
     # open replay
-    print(link)
-    driver.get(link)
+    try:
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.set_page_load_timeout(TIMEOUT)
+        driver.get(link)
+   
+        # Locate the skip to end button
+        buttons = driver.find_elements(By.CLASS_NAME, 'button-last')
+    except:
+        print(f"skipping {link}")
+        return
 
-    # Locate the skip to end button
-    buttons = driver.find_elements(By.CLASS_NAME, 'button-last')
 
     # skip to last turn
-    buttons[1].click()
+    if(len(buttons) == 2):
+        buttons[1].click()
+    else:
+        print(f"can't find buttons for {link}")
+        return
 
     # get battle log from html
     out_file = open('./battle_log.txt', 'a')
 
     # get format
     # Step 1: Find the div that contains the "Format" text (assumed to be within the parent div)
-    parent_div = driver.find_element(By.CLASS_NAME, 'inner.message-log')
+    try:
+        parent_div = driver.find_element(By.CLASS_NAME, 'inner.message-log')
+    except:
+        print(f"can't find parent div for {link}")
+        return
 
     # Step 2: Extract the inner HTML of the parent div
     html_content = parent_div.get_attribute('innerHTML')
@@ -38,9 +62,17 @@ def get_log(driver, link):
 
     out_file.close()
 
+    # process log
+
+    if(reset):
+        os.remove('./battle_log.txt')
+    driver.quit()
+    print("success!")
+
 
 # Set up the browser and go to replays
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=chrome_options)
+driver.set_page_load_timeout(TIMEOUT)
 driver.get('https://replay.pokemonshowdown.com/?format=%5BGen%201%5D%20Random%20Battle')
 
 # don't rewatch seen replays
@@ -55,10 +87,9 @@ for link in links:
     href = a_tag.get_attribute('href')
 
     if(href not in seen):
-        get_log(driver=driver, link=href)
+        get_log(link=href, reset=True)
         seen.add(href)
 
 # You can also close the browser when done
 input("Press enter to continue.")
-os.remove('./battle_log.txt')
 driver.quit()
