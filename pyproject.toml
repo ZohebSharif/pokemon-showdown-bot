@@ -6,8 +6,10 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"  # Updated to match uagents' requirement
+python = ">=3.10,<3.13"
 uagents = "^0.16.2"
+numpy = "^2.1.2"
+beautifulsoup4 = "^4.12.3"
 
 
 [build-system]
